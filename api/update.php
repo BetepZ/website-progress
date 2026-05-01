@@ -1,9 +1,9 @@
 <?php
-// File ini untuk menyimpan URL, mengubah status "Penting" (Toggle Biru), dan Catatan
+
 header('Content-Type: application/json');
 $db_file = __DIR__ . '/../database.sqlite';
 
-// Menangkap input JSON dari request frontend (Alpine.js)
+
 $inputJSON = file_get_contents('php://input');
 $input = json_decode($inputJSON, TRUE);
 
@@ -16,7 +16,7 @@ try {
     $pdo = new PDO('sqlite:' . $db_file);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // KEAMANAN: Prepared statement mencegah SQL Injection
+
     $stmt = $pdo->prepare("
         UPDATE tasks 
         SET url = :url, 

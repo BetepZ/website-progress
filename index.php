@@ -5,14 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manajemen Tugas Video & Artikel</title>
-    <!-- Memuat Tailwind CSS dari CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Memuat Alpine.js dari CDN (PENTING: Atribut defer wajib ada) -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
-    <!-- Phosphor Icons untuk ikon-ikon cantik -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
-        /* Mencegah layar berkedip saat Alpine.js sedang dimuat */
         [x-cloak] {
             display: none !important;
         }
@@ -21,10 +17,10 @@
 
 <body class="bg-gray-50 text-gray-800 antialiased min-h-screen">
 
-    <!-- Komponen Utama Alpine.js -->
+
     <div x-data="taskManager()" x-init="initData()" x-cloak class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
 
-        <!-- Notifikasi Error (Akan muncul jika gagal koneksi ke API backend) -->
+
         <div x-show="errorMessage"
             class="mb-6 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg relative flex items-center gap-3 shadow-sm"
             style="display: none;">
@@ -35,7 +31,6 @@
             </div>
         </div>
 
-        <!-- HEADER & PROGRESS BAR UTAMA -->
         <header class="mb-10 bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                 <div>
@@ -49,7 +44,6 @@
                 </div>
             </div>
 
-            <!-- Progress Bar -->
             <div class="w-full bg-gray-100 rounded-full h-4 overflow-hidden shadow-inner">
                 <div class="bg-gradient-to-r from-indigo-500 to-purple-500 h-full rounded-full transition-all duration-700 ease-in-out"
                     :style="`width: ${globalProgress}%`">
@@ -59,7 +53,7 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-            <!-- KOLOM KIRI: CONTRIBUTION GRID (156 Balok) -->
+
             <div class="lg:col-span-4 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-lg font-semibold text-gray-800">Peta Kontribusi</h2>
@@ -73,7 +67,7 @@
                     </div>
                 </div>
 
-                <!-- Kontainer Grid (12 kolom per baris) -->
+
                 <div class="grid grid-cols-12 gap-1.5 sm:gap-2">
                     <template x-for="task in allTasks" :key="task.id">
                         <div @click="toggleImportantGrid(task)"
@@ -89,10 +83,10 @@
                 </div>
             </div>
 
-            <!-- KOLOM KANAN: MANAJEMEN MINGGUAN -->
+
             <div class="lg:col-span-8 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
 
-                <!-- Kontrol Navigasi Minggu -->
+
                 <div
                     class="flex flex-col sm:flex-row justify-between items-center mb-6 pb-4 border-b border-gray-100 gap-4">
                     <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
@@ -108,20 +102,20 @@
                     </select>
                 </div>
 
-                <!-- Indikator Loading -->
+
                 <div x-show="isLoadingWeek" class="flex justify-center items-center py-12">
                     <i class="ph ph-spinner animate-spin text-4xl text-indigo-500"></i>
                 </div>
 
-                <!-- Daftar Card Tugas per Minggu -->
+
                 <div x-show="!isLoadingWeek" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <template x-for="task in currentWeekTasks" :key="task.id">
 
-                        <!-- Card Individual Tugas -->
+
                         <div class="border rounded-xl p-4 transition-all duration-300 relative overflow-hidden group"
                             :class="hasUrl(task) ? 'bg-green-50/50 border-green-200' : (task.is_important == 1 ? 'bg-blue-50/50 border-blue-200' : 'bg-white border-gray-200 hover:border-indigo-300')">
 
-                            <!-- Header Card: Kategori & Toggle Penting -->
+
                             <div class="flex justify-between items-center mb-3">
                                 <span class="text-sm font-bold uppercase tracking-wider flex items-center gap-1.5"
                                     :class="{
@@ -137,7 +131,7 @@
                                     <span x-text="`${task.category} ${task.slot_number}`"></span>
                                 </span>
 
-                                <!-- Tombol Toggle Penting -->
+
                                 <button @click="toggleImportant(task)"
                                     class="text-gray-400 hover:text-blue-600 transition-colors focus:outline-none"
                                     :class="{'text-blue-600': task.is_important == 1}">
@@ -146,14 +140,14 @@
                                 </button>
                             </div>
 
-                            <!-- Form Input URL -->
+
                             <div class="relative">
                                 <input type="url" x-model="task.tempUrl" @blur="saveUrl(task)"
                                     @keydown.enter="$event.target.blur()" placeholder="Tempel tautan di sini..."
                                     class="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 pr-10 outline-none transition-colors"
                                     :class="hasUrl(task) ? 'border-green-300' : 'border-gray-300'">
 
-                                <!-- Ikon Sukses Save -->
+
                                 <div x-show="task.isSaving" class="absolute inset-y-0 right-0 flex items-center pr-3">
                                     <i class="ph ph-spinner animate-spin text-gray-500"></i>
                                 </div>
@@ -163,9 +157,9 @@
                                 </div>
                             </div>
 
-                            <!-- Preview / Tombol Aksi External -->
+
                             <div class="mt-3 h-10 flex items-end">
-                                <!-- Jika URL YouTube (Tampilkan Thumbnail) -->
+
                                 <template x-if="hasUrl(task) && isYouTube(task.url)">
                                     <a :href="task.url" target="_blank"
                                         class="block w-full overflow-hidden rounded-lg border border-gray-200 hover:opacity-90 transition-opacity">
@@ -178,7 +172,7 @@
                                     </a>
                                 </template>
 
-                                <!-- Jika URL Instagram/Artikel (Tombol Sederhana) -->
+
                                 <template x-if="hasUrl(task) && !isYouTube(task.url)">
                                     <a :href="task.url" target="_blank"
                                         class="w-full inline-flex justify-center items-center gap-2 py-2 px-4 text-sm font-medium text-white rounded-lg transition-all focus:outline-none focus:ring-4"
@@ -216,7 +210,7 @@
                     await this.loadWeekData();
                 },
 
-                // Mengecek apakah URL valid dan tidak hanya spasi kosong
+
                 hasUrl(task) {
                     return task.url && task.url.trim() !== '';
                 },
@@ -308,7 +302,7 @@
                     }
                 },
 
-                // KHUSUS UNTUK KLIK BINTANG DARI FORM
+
                 async toggleImportant(task) {
                     const newState = (task.is_important == 1) ? 0 : 1;
                     task.is_important = newState; // Efek UI langsung biru/abu
@@ -322,23 +316,21 @@
                     }
                 },
 
-                // KHUSUS UNTUK KLIK KOTAK DI GRID DASHBOARD KIRI
+
                 async toggleImportantGrid(task) {
-                    // Blokir perubahan jika tugas sudah selesai (hijau tidak bisa jadi biru)
+
                     if (this.hasUrl(task)) return;
 
                     const newState = (task.is_important == 1) ? 0 : 1;
-                    task.is_important = newState; // Optimistic UI
-
-                    // Sinkronisasi ke form kanan (jika minggu yang tampil sama dengan kotak yang diklik)
+                    task.is_important = newState;
                     const formTask = this.currentWeekTasks.find(t => t.id === task.id);
                     if (formTask) formTask.is_important = newState;
 
                     try {
                         await this.updateTaskAPI(task.id, task.url, newState);
                     } catch (error) {
-                        task.is_important = (newState == 1) ? 0 : 1; // Rollback grid
-                        if (formTask) formTask.is_important = task.is_important; // Rollback form
+                        task.is_important = (newState == 1) ? 0 : 1;
+                        if (formTask) formTask.is_important = task.is_important;
                         console.error("Gagal toggle status penting:", error);
                     }
                 },
